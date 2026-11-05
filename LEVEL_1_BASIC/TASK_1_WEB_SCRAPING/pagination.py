@@ -4,133 +4,94 @@
 # Codveda Technology - Data Science Internship
 # ==========================================
 
-# Import required libraries
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
+from pathlib import Path
 import time
 
-# Website URL
-base_url = "https://news.ycombinator.com/news"
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
-# User-Agent header
-headers = {
+BASE_DIR = Path(__file__).resolve().parent
+BASE_URL = "https://news.ycombinator.com/news"
+HEADERS = {
     "User-Agent": "KaushikDataScienceProject/1.0 (educational project)"
 }
+MAX_PAGES = 3
 
-# Maximum number of pages to scrape
-max_pages = 3
 
-# Store all extracted records
-all_data = []
+def main():
+    all_data = []
+    visited_pages = set()
 
-# Track visited pages
-visited_pages = set()
+    for page in range(1, MAX_PAGES + 1):
+        print(f"\nScraping Page {page}...")
 
-# Start pagination
-for page in range(1, max_pages + 1):
+        if page in visited_pages:
+            print("Page already visited. Stopping.")
+            break
 
-    print(f"\nScraping Page {page}...")
+        visited_pages.add(page)
 
-    # Stop if the page has already been visited
-    if page in visited_pages:
-        print("Page already visited. Stopping.")
-        break
-
-    visited_pages.add(page)
-
-    # Send request to the website
-    try:
-        response = requests.get(
-            base_url,
-            params={"p": page},
-            headers=headers,
-            timeout=20
-        )
-
-        response.raise_for_status()
-
-    except requests.exceptions.RequestException as e:
-        print("Request failed:", e)
-        break
-
-    # Parse webpage HTML
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    # Find all news story rows
-    stories = soup.find_all("tr", class_="athing")
-
-    if not stories:
-        print("No stories found. Stopping pagination.")
-        break
-
-    # Extract story information
-    for story in stories:
-
-        title_tag = story.select_one(".titleline > a")
-        rank_tag = story.select_one(".rank")
-
-        if title_tag:
-
-            title = title_tag.get_text(strip=True)
-            link = title_tag.get("href", "")
-
-            rank = (
-                rank_tag.get_text(strip=True)
-                if rank_tag else ""
+        try:
+            response = requests.get(
+                BASE_URL,
+                params={"p": page},
+                headers=HEADERS,
+                timeout=20,
             )
+            response.raise_for_status()
+        except requests.exceptions.RequestException as exc:
+            print("Request failed:", exc)
+            break
 
-            all_data.append({
-                "Rank": rank,
-                "Title": title,
-                "URL": link,
-                "Page": page
-            })
+        soup = BeautifulSoup(response.text, "html.parser")
+        stories = soup.find_all("tr", class_="athing")
 
-    print("Stories extracted:", len(stories))
+        if not stories:
+            print("No stories found. Stopping pagination.")
+            break
 
-    # Check whether a next-page link exists
-    next_page = soup.select_one("a.morelink")
+        for story in stories:
+            title_tag = story.select_one(".titleline > a")
+            rank_tag = story.select_one(".rank")
 
-    if not next_page:
-        print("No next page available.")
-        break
+            if title_tag:
+                title = title_tag.get_text(strip=True)
+                link = title_tag.get("href", "")
+                rank = rank_tag.get_text(strip=True) if rank_tag else ""
+                all_data.append({
+                    "Rank": rank,
+                    "Title": title,
+                    "URL": link,
+                    "Page": page,
+                })
 
-    # Respect the website by waiting briefly
-    time.sleep(2)
+        print("Stories extracted:", len(stories))
 
-# ==========================================
-# CREATE DATAFRAME
-# ==========================================
+        if not soup.select_one("a.morelink"):
+            print("No next page available.")
+            break
 
-print("\nTotal stories collected:", len(all_data))
+        time.sleep(2)
 
-if not all_data:
-    raise SystemExit("No data collected. Check the website structure.")
+    print("\nTotal stories collected:", len(all_data))
 
-df = pd.DataFrame(all_data)
+    if not all_data:
+        raise SystemExit("No data collected. Check the website structure.")
 
-# Remove duplicate story URLs
-df = df.drop_duplicates(subset=["URL"]).copy()
+    df = pd.DataFrame(all_data)
+    df = df.drop_duplicates(subset=["URL"]).copy()
 
-# Display first five records
-print("\nDataset Preview:")
-print(df.head())
+    print("\nDataset Preview:")
+    print(df.head())
+    print("\nDataset Shape:", df.shape)
 
-# Display dataset dimensions
-print("\nDataset Shape:", df.shape)
+    df.to_csv(BASE_DIR / "hacker_news_paginated.csv", index=False)
+    df.to_json(BASE_DIR / "hacker_news_paginated.json", orient="records", indent=4)
 
-# ==========================================
-# EXPORT DATA
-# ==========================================
+    print("\nCSV and JSON files saved successfully!")
+    print("Pagination demonstration completed.")
 
-df.to_csv("hacker_news_paginated.csv", index=False)
 
-df.to_json(
-    "hacker_news_paginated.json",
-    orient="records",
-    indent=4
-)
-
-print("\nCSV and JSON files saved successfully!")
-print("Pagination demonstration completed.")
+if __name__ == "__main__":
+    main()

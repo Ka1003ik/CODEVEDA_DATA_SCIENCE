@@ -1,29 +1,48 @@
 from pathlib import Path
+
 import pandas as pd
 
-# Generate the final EDA report from the Task 2 dataset and charts.
-DATA_FILE = Path("preprocessed_country_population.csv")
-OUTPUT_FILE = Path("EDA_Report.md")
-
+BASE_DIR = Path(__file__).resolve().parent
+DATA_FILE = BASE_DIR / "preprocessed_country_population.csv"
+OUTPUT_FILE = BASE_DIR / "EDA_Report.md"
 CHARTS = [
-    ("Population Box Plot (Log Scale)", "population_boxplot.png",
-     "Shows the median, interquartile range, whiskers and high-population outliers. The logarithmic y-axis makes the wide range of country populations easier to view."),
-    ("Population Distribution Histogram (Log10 Scale)", "population_histogram.png",
-     "Shows the frequency distribution of log10-transformed population values. The largest concentration is around a log10 population value of 7."),
-    ("Population vs World Population Percentage", "population_vs_percentage_scatter.png",
-     "Shows the positive association between population and world-population share. The population axis is logarithmic."),
-    ("World Population Percentage Box Plot", "world_percentage_boxplot.png",
-     "Shows that most countries have small world-population shares, while a small number of countries have much larger shares."),
-    ("World Population Percentage Distribution", "world_percentage_histogram.png",
-     "Shows a strongly right-skewed distribution, with most observations near zero and a small number of much larger percentages."),
-    ("Correlation Heatmap", "correlation_heatmap.png",
-     "Visualizes the Pearson correlation between Population and World_Percentage.")
+    (
+        "Population Box Plot (Log Scale)",
+        "population_boxplot.png",
+        "Shows the median, interquartile range, whiskers and high-population outliers. The logarithmic y-axis makes the wide range of country populations easier to view.",
+    ),
+    (
+        "Population Distribution Histogram (Log10 Scale)",
+        "population_histogram.png",
+        "Shows the frequency distribution of log10-transformed population values. The largest concentration is around a log10 population value of 7.",
+    ),
+    (
+        "Population vs World Population Percentage",
+        "population_vs_percentage_scatter.png",
+        "Shows the positive association between population and world-population share. The population axis is logarithmic.",
+    ),
+    (
+        "World Population Percentage Box Plot",
+        "world_percentage_boxplot.png",
+        "Shows that most countries have small world-population shares, while a small number of countries have much larger shares.",
+    ),
+    (
+        "World Population Percentage Distribution",
+        "world_percentage_histogram.png",
+        "Shows a strongly right-skewed distribution, with most observations near zero and a small number of much larger percentages.",
+    ),
+    (
+        "Correlation Heatmap",
+        "correlation_heatmap.png",
+        "Visualizes the Pearson correlation between Population and World_Percentage.",
+    ),
 ]
+
 
 def main():
     if not DATA_FILE.exists():
         raise FileNotFoundError(
-            f"Cannot find {DATA_FILE}. Run this script from the TASK_3_EDA folder."
+            f"Cannot find {DATA_FILE}. Run this script from the TASK_3_EDA folder or provide an absolute path."
         )
 
     df = pd.read_csv(DATA_FILE)
@@ -98,7 +117,8 @@ def main():
 
     for title, filename, description in CHARTS:
         lines += [f"### {title}", ""]
-        if Path(filename).exists():
+        chart_path = BASE_DIR / filename
+        if chart_path.exists():
             lines += [f"![{title}]({filename})", ""]
         else:
             lines += [f"> Chart file not found at report-generation time: `{filename}`", ""]
@@ -166,6 +186,7 @@ def main():
     print(f"Pearson correlation: {r:.6f}")
     print(f"IQR outliers - Population: {outlier_counts['Population']}")
     print(f"IQR outliers - World_Percentage: {outlier_counts['World_Percentage']}")
+
 
 if __name__ == "__main__":
     main()

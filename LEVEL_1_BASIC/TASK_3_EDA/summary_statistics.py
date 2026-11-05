@@ -1,27 +1,39 @@
 
+from pathlib import Path
+
 import pandas as pd
 
-# Load Task 2 output dataset
-df = pd.read_csv("preprocessed_country_population.csv")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_FILE = BASE_DIR / "preprocessed_country_population.csv"
+OUTPUT_FILE = BASE_DIR / "summary_statistics.csv"
 
-print("DATASET INFORMATION")
-print("Shape:", df.shape)
-print("\nColumns:")
-print(df.columns.tolist())
 
-# Select original numerical columns
-numeric_columns = ["Population", "World_Percentage"]
+def main():
+    df = pd.read_csv(DATA_FILE)
 
-# Calculate summary statistics
-summary = df[numeric_columns].agg(
-    ["count", "mean", "median", "var", "std", "min", "max"]
-).T
+    print("DATASET INFORMATION")
+    print("Shape:", df.shape)
+    print("\nColumns:")
+    print(df.columns.tolist())
 
-print("\nSUMMARY STATISTICS")
-print(summary)
+    numeric_columns = ["Population", "World_Percentage"]
+    summary = df[numeric_columns].agg([
+        "count",
+        "mean",
+        "median",
+        "var",
+        "std",
+        "min",
+        "max",
+    ]).T
 
-# Save summary statistics
-summary.to_csv("summary_statistics.csv")
+    print("\nSUMMARY STATISTICS")
+    print(summary)
 
-print("\nSummary statistics saved successfully!")
-print("EDA Step 1 completed!")
+    summary.to_csv(OUTPUT_FILE)
+    print(f"\nSummary statistics saved to {OUTPUT_FILE}.")
+    print("EDA Step 1 completed!")
+
+
+if __name__ == "__main__":
+    main()

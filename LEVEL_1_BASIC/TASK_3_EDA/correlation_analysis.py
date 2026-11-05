@@ -1,42 +1,42 @@
-import pandas as pd
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
 
-# Load Task 2 preprocessed dataset
-df = pd.read_csv("preprocessed_country_population.csv")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_FILE = BASE_DIR / "preprocessed_country_population.csv"
 
-# Select original numerical features
-numeric_columns = ["Population", "World_Percentage"]
 
-# Calculate correlation matrix
-correlation_matrix = df[numeric_columns].corr(method="pearson")
+def main():
+    df = pd.read_csv(DATA_FILE)
+    numeric_columns = ["Population", "World_Percentage"]
+    correlation_matrix = df[numeric_columns].corr(method="pearson")
 
-print("CORRELATION MATRIX")
-print(correlation_matrix)
+    print("CORRELATION MATRIX")
+    print(correlation_matrix)
 
-# Save correlation matrix
-correlation_matrix.to_csv("correlation_matrix.csv")
+    correlation_matrix.to_csv(BASE_DIR / "correlation_matrix.csv")
 
-# Create correlation heatmap
-plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(
+        correlation_matrix,
+        annot=True,
+        cmap="coolwarm",
+        fmt=".3f",
+        linewidths=0.5,
+        vmin=-1,
+        vmax=1,
+    )
+    plt.title("Correlation Matrix of Population Features")
+    plt.tight_layout()
+    plt.savefig(BASE_DIR / "correlation_heatmap.png", dpi=300)
+    plt.close()
 
-sns.heatmap(
-    correlation_matrix,
-    annot=True,
-    cmap="coolwarm",
-    fmt=".3f",
-    linewidths=0.5,
-    vmin=-1,
-    vmax=1
-)
+    print("\nCorrelation analysis completed!")
+    print("Correlation matrix saved successfully!")
+    print("Heatmap saved successfully!")
 
-plt.title("Correlation Matrix of Population Features")
-plt.tight_layout()
 
-# Save heatmap
-plt.savefig("correlation_heatmap.png", dpi=300)
-plt.close()
-
-print("\nCorrelation analysis completed!")
-print("Correlation matrix saved successfully!")
-print("Heatmap saved successfully!")
+if __name__ == "__main__":
+    main()

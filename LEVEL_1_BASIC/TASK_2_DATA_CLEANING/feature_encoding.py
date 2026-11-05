@@ -1,40 +1,35 @@
+from pathlib import Path
 
 import pandas as pd
 
-# Load the cleaned dataset from the previous step
-df = pd.read_csv("cleaned_country_population.csv")
+BASE_DIR = Path(__file__).resolve().parent
+INPUT_FILE = BASE_DIR / "cleaned_country_population.csv"
+OUTPUT_FILE = BASE_DIR / "encoded_country_population.csv"
 
-print("Original dataset shape:", df.shape)
 
-# Create population groups using quartiles
-df["Population_Group"] = pd.qcut(
-    df["Population"],
-    q=4,
-    labels=["Low", "Medium-Low", "Medium-High", "High"]
-)
+def main():
+    df = pd.read_csv(INPUT_FILE)
 
-# Display group distribution
-print("\nPopulation Group Distribution:")
-print(df["Population_Group"].value_counts())
+    print("Original dataset shape:", df.shape)
 
-# Apply One-Hot Encoding
-df = pd.get_dummies(
-    df,
-    columns=["Population_Group"],
-    dtype=int
-)
+    df["Population_Group"] = pd.qcut(
+        df["Population"],
+        q=4,
+        labels=["Low", "Medium-Low", "Medium-High", "High"],
+    )
 
-# Display results
-print("\nEncoded Dataset Preview:")
-print(df.head())
+    print("\nPopulation Group Distribution:")
+    print(df["Population_Group"].value_counts())
 
-print("\nEncoded Dataset Shape:", df.shape)
+    df = pd.get_dummies(df, columns=["Population_Group"], dtype=int)
 
-# Export encoded dataset
-df.to_csv(
-    "encoded_country_population.csv",
-    index=False,
-    encoding="utf-8-sig"
-)
+    print("\nEncoded Dataset Preview:")
+    print(df.head())
+    print("\nEncoded Dataset Shape:", df.shape)
 
-print("\nCategorical encoding completed successfully!")
+    df.to_csv(OUTPUT_FILE, index=False, encoding="utf-8-sig")
+    print(f"\nCategorical encoding completed successfully! Saved to {OUTPUT_FILE}.")
+
+
+if __name__ == "__main__":
+    main()
