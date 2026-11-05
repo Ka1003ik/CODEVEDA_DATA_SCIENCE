@@ -32,7 +32,7 @@ def main():
     print(df.describe())
 
     print("\nCATEGORICAL SUMMARY")
-    print(df.describe(include="str"))
+    print(df.describe(include="all"))
 
 
 if __name__ == "__main__":

@@ -37,7 +37,7 @@ TASK_1_WEB_SCRAPING/
 - **Libraries:** `requests`, `beautifulsoup4`, `pandas`
 - **Method:** Requests pages using the page parameter, extracts story ranks, titles and URLs, combines records, removes duplicate URLs, and exports the result.
 - **Pages requested:** 3
-- **Recorded result:** 90 stories collected before duplicate removal and 89 unique URL records after duplicate removal.
+- **Recorded result:** 90 stories collected and 90 unique URL records after duplicate removal. Counts can change as new stories are posted.
 - **Outputs:** `hacker_news_paginated.csv` and `hacker_news_paginated.json`
 
 ### 3. Dynamic-content demonstration

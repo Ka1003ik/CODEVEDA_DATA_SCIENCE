@@ -41,15 +41,13 @@ def main():
             )
             response.raise_for_status()
         except requests.exceptions.RequestException as exc:
-            print("Request failed:", exc)
-            break
+            raise SystemExit(f"Request failed on page {page}: {exc}") from exc
 
         soup = BeautifulSoup(response.text, "html.parser")
         stories = soup.find_all("tr", class_="athing")
 
         if not stories:
-            print("No stories found. Stopping pagination.")
-            break
+            raise SystemExit(f"No stories found on page {page}; the page structure may have changed.")
 
         for story in stories:
             title_tag = story.select_one(".titleline > a")
