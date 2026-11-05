@@ -1,4 +1,4 @@
-# CODEVEDA Data Science
+# Data-collection-and-Exploration
 
 A collection of beginner-friendly data science projects completed as part of the Codveda Technology Data Science Internship, Level 1 (Basic). The projects cover web data collection, data cleaning and preprocessing, and exploratory data analysis (EDA).
 
