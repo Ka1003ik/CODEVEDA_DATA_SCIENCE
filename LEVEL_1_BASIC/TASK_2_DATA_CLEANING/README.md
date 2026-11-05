@@ -92,14 +92,14 @@ python -m pip install pandas scikit-learn
 
 ## How to run
 
-Run the scripts in order from the project folder or by referencing the file paths directly:
+Run the scripts in order from the repository root:
 
 ```bash
-python TASK_2_DATA_CLEANING/data_inspection.py
-python TASK_2_DATA_CLEANING/data_cleaning.py
-python TASK_2_DATA_CLEANING/feature_encoding.py
-python TASK_2_DATA_CLEANING/feature_scaling.py
-python TASK_2_DATA_CLEANING/final_validation.py
+python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/data_inspection.py
+python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/data_cleaning.py
+python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/feature_encoding.py
+python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/feature_scaling.py
+python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/final_validation.py
 ```
 
 The scripts resolve their CSV inputs and outputs relative to their own folder, so they work reliably from any working directory. Each processing stage reads the output created by the preceding stage; `data_inspection.py` reads the original input.

@@ -28,10 +28,10 @@ TASK_3_EDA/
 From the repository root, run:
 
 ```bash
-python TASK_3_EDA/summary_statistics.py
-python TASK_3_EDA/data_visualization.py
-python TASK_3_EDA/correlation_analysis.py
-python TASK_3_EDA/generate_eda_report.py
+python LEVEL_1_BASIC/TASK_3_EDA/summary_statistics.py
+python LEVEL_1_BASIC/TASK_3_EDA/data_visualization.py
+python LEVEL_1_BASIC/TASK_3_EDA/correlation_analysis.py
+python LEVEL_1_BASIC/TASK_3_EDA/generate_eda_report.py
 ```
 
 The scripts resolve their file paths relative to their own folder. That keeps the generated reports and chart files in the same directory as the source code.

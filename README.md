@@ -23,7 +23,15 @@ Each task folder includes its relevant scripts, datasets or generated results, a
 
 ## Getting started
 
-Install Python 3 and follow the requirements and run instructions in the README for the task you want to explore. Run scripts from their task directory so relative file paths resolve correctly. Tasks may have different dependencies.
+Install Python 3.11 or newer and the project dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Run scripts from the repository root using the paths in each task README. Scripts resolve input and output files relative to their own folder.
+
+The GitHub Actions workflow compiles all Python files and runs the Task 2 and Task 3 data workflows. The live web-scraping scripts are not run in CI because they depend on external websites and, for the dynamic example, a browser.
 
 ## Notes
 

@@ -61,12 +61,12 @@ python -m pip install requests beautifulsoup4 pandas selenium
 Selenium 4 includes Selenium Manager, which normally manages the compatible browser driver automatically.
 
 ### How to run
-From any terminal, run each script directly from the project folder (or via a full path):
+From the repository root, run each script:
 
 ```bash
-python TASK_1_WEB_SCRAPING/web_scraping.py
-python TASK_1_WEB_SCRAPING/pagination.py
-python TASK_1_WEB_SCRAPING/dynamic_content.py
+python LEVEL_1_BASIC/TASK_1_WEB_SCRAPING/web_scraping.py
+python LEVEL_1_BASIC/TASK_1_WEB_SCRAPING/pagination.py
+python LEVEL_1_BASIC/TASK_1_WEB_SCRAPING/dynamic_content.py
 ```
 
 The scripts resolve their output paths relative to the script location, so the CSV and JSON files are saved alongside the code files even when the working directory is different.

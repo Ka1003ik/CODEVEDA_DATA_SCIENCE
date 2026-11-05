@@ -1,0 +1,49 @@
+name: Python CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip check
+
+      - name: Compile Python scripts
+        run: python -m compileall -q LEVEL_1_BASIC
+
+      - name: Run data cleaning workflow
+        run: |
+          python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/data_inspection.py
+          python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/data_cleaning.py
+          python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/feature_encoding.py
+          python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/feature_scaling.py
+          python LEVEL_1_BASIC/TASK_2_DATA_CLEANING/final_validation.py
+
+      - name: Run EDA workflow
+        run: |
+          python LEVEL_1_BASIC/TASK_3_EDA/summary_statistics.py
+          python LEVEL_1_BASIC/TASK_3_EDA/data_visualization.py
+          python LEVEL_1_BASIC/TASK_3_EDA/correlation_analysis.py
+          python LEVEL_1_BASIC/TASK_3_EDA/generate_eda_report.py
